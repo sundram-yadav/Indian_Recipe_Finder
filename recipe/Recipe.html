@@ -1,0 +1,476 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Indian Recipe Finder</title>
+    <script>
+        // Store recipes and comments in memory
+        let recipes = [
+            {
+                name: "Quick Maggi",
+                author: "Sushant Yadav",
+                city: "Delhi",
+                time: "5 minutes",
+                type: "Vegetarian",
+                ingredients: "- Maggi noodles\n- Water\n- Maggi masala\n- Vegetables (optional)\n- Butter",
+                instructions: "1. Boil 1.5 cups water\n2. Add noodles and masala\n3. Cook for 2 minutes\n4. Add butter and serve hot",
+                tags: "Quick, Bachelor, 5 Min"
+            },
+            {
+                name: "Hyderabadi Biryani",
+                author: "Mohammed Siraj",
+                city: "Hyderabad, Telangana",
+                time: "120 minutes",
+                type: "Non-Vegetarian",
+                ingredients: "- Basmati rice\n- Chicken/Mutton\n- Yogurt\n- Onions\n- Ginger-garlic paste\n- Biryani spices\n- Saffron\n- Ghee",
+                instructions: "1. Marinate meat with yogurt and spices for 2 hours\n2. Fry onions until golden\n3. Par-cook rice\n4. Layer meat and rice\n5. Dum cook for 45 minutes\n6. Serve with raita",
+                tags: "Traditional, Non-Veg, Telangana"
+            },
+            {
+                name: "Mumbai Vada Pav",
+                author: "Mahesh Bapu Waghmode",
+                city: "Latur, Maharashtra",
+                time: "30 minutes",
+                type: "Vegetarian",
+                ingredients: "- Potatoes\n- Pav bread\n- Green chutney\n- Garlic chutney\n- Besan\n- Spices\n- Oil for frying",
+                instructions: "1. Boil and mash potatoes with spices\n2. Make vada with besan coating\n3. Deep fry until golden\n4. Apply chutneys on pav\n5. Place vada and serve hot",
+                tags: "Street Food, Traditional, Mumbai"
+            }
+        ];
+
+        let comments = [
+            { author: "Shreyash", text: "Love this platform! Found amazing recipes from my hometown!" },
+            { author: "Ritesh", text: "The bachelor special recipes are lifesavers! Thank you!" }
+        ];
+        function searchRecipes() {
+        const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
+
+        const recipeTables = document.querySelectorAll(
+            'center table[border="3"]'
+            );
+
+        if (searchText === "") {
+            recipeTables.forEach(table => {
+            table.parentElement.style.display = "block";
+        });
+        return;
+        }
+
+        recipeTables.forEach(table => {
+            const recipeText = table.innerText.toLowerCase();
+
+            if (recipeText.includes(searchText)) {
+            table.parentElement.style.display = "block";
+            } else {
+                table.parentElement.style.display = "none";
+            }
+            });
+        }
+
+        function uploadRecipe(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('recipeName').value;
+            const author = document.getElementById('authorName').value;
+            const city = document.getElementById('recipeCity').value;
+            const category = document.getElementById('recipeCategory').value;
+            const type = document.getElementById('recipeType').value;
+            const time = document.getElementById('cookingTime').value;
+            const ingredients = document.getElementById('ingredients').value;
+            const instructions = document.getElementById('instructions').value;
+
+            if (!name || !author || !city || !category || !time || !ingredients || !instructions) {
+                alert('Please fill all fields!');
+                return;
+            }
+
+            const newRecipe = {
+                name: name,
+                author: author,
+                city: city,
+                time: time + ' minutes',
+                type: type,
+                ingredients: ingredients,
+                instructions: instructions,
+                tags: category + ', ' + type
+            };
+
+            recipes.push(newRecipe);
+            
+            alert('Recipe uploaded successfully! Total recipes: ' + recipes.length);
+            
+            document.getElementById('uploadForm').reset();
+        }
+
+        function postComment() {
+            const commentText = document.getElementById('commentInput').value;
+            if (commentText.trim() === '') {
+                alert('Please write a comment first!');
+                return;
+            }
+
+            const newComment = {
+                author: 'You',
+                text: commentText
+            };
+
+            comments.push(newComment);
+            
+            const commentHTML = '<br><table bgcolor="white" width="100%" cellpadding="10" border="1"><tr><td><b><font color="blue">' + newComment.author + ':</font></b><br>' + newComment.text + '</td></tr></table>';
+            
+            document.getElementById('commentsSection').innerHTML += commentHTML;
+            
+            document.getElementById('commentInput').value = '';
+            
+            alert('Comment posted successfully!');
+        }
+
+        function enterSearch(event) {
+            if (event.key === 'Enter') {
+                searchRecipes();
+            }
+        }
+
+        function enterComment(event) {
+            if (event.key === 'Enter') {
+                postComment();
+            }
+        }
+
+    </script>
+</head>
+<body bgcolor="#FFE5B4">
+    
+    <center>
+        <h1><font color=" red ">   Indian Recipe Finder   </font></h1>
+        <h3><font color=" blue ">   Connecting India Through Taste   </font></h3>
+        <hr width="75%" color=" orange ">
+    </center>
+
+    <br><br>
+
+
+
+
+    <!-- search box( where user will search for what he want ) -->
+    <center>
+        <table border="3" bgcolor="white" width="70%" cellpadding="15">
+            <tr>
+                <td>
+                    <center>
+                        <h2><font color="orange">🔍 Search Recipes</font></h2>
+                        <input type="text" id="searchInput" size="50" placeholder="Search for recipes " onkeypress="enterSearch(event)">
+                        <button onclick="searchRecipes()">Search</button>
+                    </center>
+                </td>
+            </tr>
+        </table>
+    </center>
+
+    <br><br>
+
+
+
+
+
+    <!-- Upload Recipe Section (here users can upload the recipe) -->
+    <center>
+        <table border="2" bgcolor="#FFFFE0" width="70%" cellpadding="15">
+            <tr>
+                <td>
+                    <h2><font color="purple">📤 Upload Your Recipe</font></h2>
+                    <h3><font color="green"> Here you can upload the traditional recipe of your local area or recipe invented by you. </font></h3>
+                    <form id="uploadForm" onsubmit="uploadRecipe(event)">
+                        <b>Recipe Name:</b><br>
+                        <input type="text" id="recipeName" size="50"><br><br>
+
+                        <b>Your Name:</b><br>
+                        <input type="text" id="authorName" size="50"><br><br>
+
+                        <b>City/Region:</b><br>
+                        <input type="text" id="recipeCity" size="50"><br><br>
+
+                        <b>Category:</b><br>
+                        <select id="recipeCategory">
+                            <option>Instant/Quick</option>
+                            <option>Traditional</option>
+                            <option>Bachelor Special</option>
+                            <option>Healthy</option>
+                            <option>Hostel Special</option>
+                            <option>Unhealthy</option>
+
+                        </select><br><br>
+
+                        <b>Type:</b><br>
+                        <select id="recipeType">
+                            <option>Vegetarian</option>
+                            <option>Non-Vegetarian</option>
+                        </select><br><br>
+
+                        <b>Cooking Time (minutes):</b><br>
+                        <input type="number" id="cookingTime"><br><br>
+
+                        <b>Ingredients:</b><br>
+                        <textarea id="ingredients" rows="4" cols="52"></textarea><br><br>
+
+                        <b>Instructions:</b><br>
+                        <textarea id="instructions" rows="6" cols="52"></textarea><br><br>
+
+                        <button type="submit">Upload Recipe</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </center>
+
+    <br><br>
+
+
+
+
+    <!-- Recipes Display (here example recipe's will be displayed)-->
+    <center>
+        <h2><font color="darkgreen">Featured Recipes</font></h2>
+        <hr width="75%">
+    </center>
+
+    <br>
+
+<div id="uploadedRecipes"></div>
+
+
+
+    <!-- example 1 -->
+    <center>
+        <table border="3" bgcolor="#FFE4E1" width="70%" cellpadding="10">
+            <tr bgcolor="#FF6347">
+                <td colspan="2">
+                    <center><h3><font color="white">Quick Maggi</font></h3></center>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%"><b>Author:</b></td>
+                <td>Sushant Yadav</td>
+            </tr>
+            <tr>
+                <td><b>City:</b></td>
+                <td>Delhi</td>
+            </tr>
+            <tr>
+                <td><b>Time:</b></td>
+                <td>5 minutes ⏱️</td>
+            </tr>
+            <tr>
+                <td><b>Type:</b></td>
+                <td>Vegetarian 🥗</td>
+            </tr>
+            <tr>
+                <td valign="top"><b>Ingredients:</b></td>
+                <td>
+                    - Maggi noodles<br>
+                    - Water<br>
+                    - Maggi masala<br>
+                    - Vegetables (optional)<br>
+                    - Butter
+                </td>
+            </tr>
+            <tr>
+                <td valign="top"><b>Instructions:</b></td>
+                <td>
+                    1. Boil 1.5 cups water<br>
+                    2. Add noodles and masala<br>
+                    3. Cook for 2 minutes<br>
+                    4. Add butter and serve hot
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" bgcolor="#FFB6C1">
+                    <center><i>Tags: Quick, Bachelor, 5 Min</i></center>
+                </td>
+            </tr>
+        </table>
+    </center>
+
+    <br><br>
+
+
+
+    <!-- exapmle 2 -->
+    <center>
+        <table border="3" bgcolor="#E6E6FA" width="70%" cellpadding="10">
+            <tr bgcolor="#4B0082">
+                <td colspan="2">
+                    <center><h3><font color="white">Hyderabadi Biryani</font></h3></center>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%"><b>Author:</b></td>
+                <td> Mohammed Siraj</td>
+            </tr>
+            <tr>
+                <td><b>City:</b></td>
+                <td>Hyderabad, Telangana</td>
+            </tr>
+            <tr>
+                <td><b>Time:</b></td>
+                <td>120 minutes ⏱️</td>
+            </tr>
+            <tr>
+                <td><b>Type:</b></td>
+                <td>Non-Vegetarian 🍖</td>
+            </tr>
+            <tr>
+                <td valign="top"><b>Ingredients:</b></td>
+                <td>
+                    - Basmati rice<br>
+                    - Chicken/Mutton<br>
+                    - Yogurt<br>
+                    - Onions<br>
+                    - Ginger-garlic paste<br>
+                    - Biryani spices<br>
+                    - Saffron<br>
+                    - Ghee
+                </td>
+            </tr>
+            <tr>
+                <td valign="top"><b>Instructions:</b></td>
+                <td>
+                    1. Marinate meat with yogurt and spices for 2 hours<br>
+                    2. Fry onions until golden<br>
+                    3. Par-cook rice<br>
+                    4. Layer meat and rice<br>
+                    5. Dum cook for 45 minutes<br>
+                    6. Serve with raita
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" bgcolor="#D8BFD8">
+                    <center><i>Tags: Traditional, Non-Veg, Telangana</i></center>
+                </td>
+            </tr>
+        </table>
+    </center>
+
+    <br><br>
+
+
+
+    <!-- example 3 -->
+    <center>
+        <table border="3" bgcolor="#FFF8DC" width="70%" cellpadding="10">
+            <tr bgcolor="#FF8C00">
+                <td colspan="2">
+                    <center><h3><font color="white">Mumbai Vada Pav</font></h3></center>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%"><b>Author:</b></td>
+                <td>Mahesh Bapu Waghmode</td>
+            </tr>
+            <tr>
+                <td><b>City:</b></td>
+                <td>Latur, Maharashtra</td>
+            </tr>
+            <tr>
+                <td><b>Time:</b></td>
+                <td>30 minutes ⏱️</td>
+            </tr>
+            <tr>
+                <td><b>Type:</b></td>
+                <td>Vegetarian 🥗</td>
+            </tr>
+            <tr>
+                <td valign="top"><b>Ingredients:</b></td>
+                <td>
+                    - Potatoes<br>
+                    - Pav bread<br>
+                    - Green chutney<br>
+                    - Garlic chutney<br>
+                    - Besan<br>
+                    - Spices<br>
+                    - Oil for frying
+                </td>
+            </tr>
+            <tr>
+                <td valign="top"><b>Instructions:</b></td>
+                <td>
+                    1. Boil and mash potatoes with spices<br>
+                    2. Make vada with besan coating<br>
+                    3. Deep fry until golden<br>
+                    4. Apply chutneys on pav<br>
+                    5. Place vada and serve hot
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" bgcolor="#FFE4B5">
+                    <center><i>Tags: Street Food, Traditional, Mumbai</i></center>
+                </td>
+            </tr>
+        </table>
+    </center>
+
+    <br><br>
+
+
+
+
+
+
+    <!-- Feedback Box -->
+    <center>
+        <table border="2" bgcolor="#E0FFFF" width="70%" cellpadding="15">
+            <tr>
+                <td>
+                    <h2><font color="navy">💬 Community Feedback</font></h2>
+                    <b>Share your thoughts:</b><br><br>
+                    <input type="text" id="commentInput" size="50" placeholder="Write a comment..." onkeypress="enterComment(event)">
+                    <button onclick="postComment()">Post</button>
+                    
+                    <br><br><hr><br>
+                    
+                    <div id="commentsSection">
+                        <table bgcolor="white" width="100%" cellpadding="10" border="1">
+                            <tr>
+                                <td>
+                                    <b><font color="blue">Shreyash:</font></b><br>
+                                    Love this platform! Found amazing recipes from my hometown!
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <br>
+                        
+                        <table bgcolor="white" width="100%" cellpadding="10" border="1">
+                            <tr>
+                                <td>
+                                    <b><font color="blue">Ritesh:</font></b><br>
+                                    The bachelor special recipes are lifesavers! Thank you!
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </center>
+
+    <br><br>
+
+
+
+
+
+    <!--Thanks For Viewing-->
+    <center>
+        <hr width="80%" color="orange">
+        <h3><font color="darkblue">Made with ❤️ by SUNDRAM YADAV</font></h3>
+        <p><i>Connecting India Through Taste</i></p>
+        <br>
+    </center>
+
+
+    <!-- store.js added ONLY -->
+    <script src="store.js"></script>
+
+</body>
+</html>
